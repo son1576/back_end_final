@@ -5,16 +5,21 @@ const Tour = require('../../models/tourModel');
 const Review = require('../../models/reviewModel');
 const User = require('../../models/userModel');
 
-dotenv.config({ path: './config.env' });
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const DB = process.env.DATABASE.replace(
-  '<password>',
-  process.env.DATABASE_PASSWORD
-);
 
-mongoose.connect(DB).then(() => {
-  console.log('DB connection successful!');
-});
+const DB = process.env.DATABASE;
+
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Giảm timeout xuống 5 giây để phản hồi nhanh hơn
+  })
+  .then(() => console.log('✅ Database connected successfully'))
+  .catch(err => console.error('❌ Database connection failed:', err));
+
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 const reviews = JSON.parse(
