@@ -6,9 +6,9 @@ This is a full-stack project for a fictional tour booking company called Natours
 
 To get started with the project, clone the repository to your local machine and install the dependencies:
 
-`git clone https://github.com/Mahmoud-AbouDeghedy/natours.git`
+`git clone https://github.com/son1576/back_end_final`
 
-`cd natours`
+`cd back_end_final`
 
 `npm install`
 
