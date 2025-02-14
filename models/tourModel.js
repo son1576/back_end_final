@@ -140,12 +140,19 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.pre(/^find/, function (next) {
+  this.find({ secretTour: { $ne: true } });
+
   this.populate({
     path: 'guides',
     select: '-__v -passwordChangedAt',
+  }).populate({
+    path: 'reviews',
+    select: 'review rating user', // Chọn các trường cần lấy
   });
+
   next();
 });
+
 
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start}ms`);
