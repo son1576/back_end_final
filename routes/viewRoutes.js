@@ -4,6 +4,7 @@ const viewController = require('../controllers/viewController');
 const authController = require('../controllers/authController');
 const tourController = require('../controllers/tourController');
 const userController = require('../controllers/userController');
+const reviewController = require('../controllers/reviewController');
 
 const Router = express.Router();
 
@@ -39,12 +40,7 @@ Router.get(
   viewController.getManageUsers
 );
 
-Router.get(
-  '/manage-reviews',
-  authController.protect,
-  authController.restrictTo('admin'),
-  viewController.getManageReviews
-);
+
 
 Router.get(
   '/manage-bookings',
@@ -113,5 +109,12 @@ Router.post(
   userController.deleteUser
 );
 
-
+//manage review route
+Router.get(
+  '/manage-reviews',
+  authController.protect,
+  authController.restrictTo('admin'),
+  viewController.getManageReviews
+);
+Router.post('/manage-reviews/delete/:id', reviewController.deleteReview);
 module.exports = Router;

@@ -7,7 +7,10 @@ const catchAsync = require('../utils/catchAsync');
 const handlerFactory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.tourId);
+  const tourId = req.params.tourId.trim();
+  const tour = await Tour.findById(tourId);
+
+  console.log(tour.imageCover);
 
   const product = await stripe.products.create({
     name: `${tour.name} Tour`,

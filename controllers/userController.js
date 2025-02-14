@@ -61,7 +61,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
 
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, 'name', 'email', 'photo');
   if (req.file) {
     filteredBody.photo = req.file.filename;
   }
@@ -134,12 +134,11 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 });
 
 exports.uploadUserImages = upload.fields([
-  { name: 'imageCover', maxCount: 1 },
-  { name: 'images', maxCount: 3 },
+  { name: 'photo', maxCount: 1 },
 ]);
 
 exports.resizeUserImages = catchAsync(async (req, res, next) => {
-  if (!req.files.imageCover || !req.files.images) {
+  if (!req.files.photo) {
     return next();
   }
 });

@@ -142,7 +142,8 @@ exports.getManageReviews = catchAsync(async (req, res, next) => {
 });
 
 exports.getManageBookings = catchAsync(async (req, res, next) => {
-  const bookings = await Booking.find().populate('user tour');
+  const bookings = await Booking.find().populate('user').populate('tour');
+  console.log(bookings); // Kiểm tra dữ liệu
   res.status(200).render('manage-bookings', {
     title: 'Manage Bookings',
     bookings,
