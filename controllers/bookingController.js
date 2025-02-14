@@ -81,6 +81,7 @@ exports.webhookCheckout = async (req, res, next) => {
   });
 };
 
+
 exports.getAllBookings = handlerFactory.getAll(Booking);
 exports.createBooking = handlerFactory.createOne(Booking);
 exports.deleteBooking = handlerFactory.deleteOne(Booking);

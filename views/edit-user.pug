@@ -1,0 +1,34 @@
+extends base
+
+block content
+    .container
+        h1 Edit User
+        form(method="POST" action=`/manage-users/update/${user._id}` enctype="multipart/form-data")
+            .form-group
+                label(for="name") Name
+                input#name.form-control(type="text" name="name" value=user.name required)
+
+            .form-group
+                label(for="email") Email
+                input#email.form-control(type="email" name="email" value=user.email required)
+
+            .form-group
+                label(for="role") Role
+                select#role.form-control(name="role" required)
+                    option(value="user" selected=user.role==='user') User
+                    option(value="admin" selected=user.role==='admin') Admin
+
+            .form-group
+                label(for="photo") Current Photo
+                img(src=`/img/users/${user.photo}` alt="User Photo" width="100")
+
+            .form-group
+                label(for="photo") Upload New Photo
+                input#photo.form-control(type="file" name="photo" accept="image/*")
+
+            .form-group
+                label(for="active") Active
+                input#active(type="checkbox" name="active" checked=user.active)
+
+            .form-group
+                button.btn.btn-primary(type="submit") Update User

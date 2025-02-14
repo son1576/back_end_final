@@ -46,4 +46,7 @@ Router.route('/:id')
     tourController.deleteTour
   );
 
+  
+    
+  
 module.exports = Router;

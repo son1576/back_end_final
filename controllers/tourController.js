@@ -67,9 +67,59 @@ exports.getAllTours = handlerFactory.getAll(Tour);
 exports.getTour = handlerFactory.getOne(Tour, {
   path: 'reviews',
 });
-exports.createTour = handlerFactory.createOne(Tour);
-exports.updateTour = handlerFactory.updateOne(Tour);
-exports.deleteTour = handlerFactory.deleteOne(Tour);
+
+exports.createTour = catchAsync(async (req, res, next) => {
+  const newTour = await Tour.create(req.body);
+
+  // Nếu request là từ API (JSON), trả về response JSON
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour,
+      },
+    });
+  }
+
+  // Nếu request từ giao diện web, chuyển hướng về trang manage-tour
+  res.redirect('/manage-tours');
+});
+
+exports.renderNewTour = (req, res) => {
+  res.status(200).render('new-tour', {
+    title: 'Add New Tour',
+  });
+};
+
+exports.renderEditTour = catchAsync(async (req, res, next) => {
+  const tour = await Tour.findById(req.params.id);
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+  res.status(200).render('edit-tour', {
+    title: 'Edit Tour',
+    tour,
+  });
+});
+exports.updateTour = catchAsync(async (req, res, next) => {
+  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
+  res.redirect('/manage-tours'); // Sau khi update, chuyển hướng về trang quản lý tours
+});
+
+exports.deleteTour = catchAsync(async (req, res, next) => {
+  await Tour.findByIdAndDelete(req.params.id);
+  res.redirect('/manage-tours');
+});
+
+
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([

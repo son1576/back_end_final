@@ -1,0 +1,45 @@
+extends base
+
+block content
+    section.section-edit-review
+        h1.heading-primary Edit Your Review
+
+        form.form(action=`/api/v1/reviews/${review._id}`, method="POST" onsubmit="submitEditReview(event)")
+            .form__group
+                label(for="tour") Tour
+                input#tour.form__input(type="text", value=review.tour.name, disabled)
+
+            .form__group
+                label(for="review") Review
+                textarea#review.form__input(name="review") #{review.review}
+
+            .form__group
+                label(for="rating") Rating
+                input#rating.form__input(type="number" name="rating" min="1" max="5", value=review.rating)
+
+            .form__group
+                button.btn.btn--green(type="submit") Save Changes
+
+    script.
+        function submitEditReview(event) {
+            event.preventDefault();
+
+            const reviewId = "#{review._id}";
+            const reviewText = document.getElementById('review').value;
+            const rating = document.getElementById('rating').value;
+
+            fetch(`/api/v1/reviews/${reviewId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ review: reviewText, rating: rating })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Review updated successfully!');
+                    window.location.href = '/my-reviews';
+                } else {
+                    alert('Failed to update review.');
+                }
+            });
+        }

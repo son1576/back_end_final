@@ -1,0 +1,51 @@
+extends base
+
+block content
+  main.main
+    section
+      h1.heading My Reviews
+
+      if reviews.length === 0
+        p No reviews found.
+
+      else
+        table
+          thead
+            tr
+              th Tour Id
+              th Review
+              th Rating
+              th Actions
+          tbody
+            each review in reviews
+              tr
+                td #{review.tour.slug}
+                td #{review.review}
+                td #{review.rating} / 5
+                td        
+                  a.btn.btn--blue.btn-small(href=`/tour/${review.tour.slug}`) View Tour
+                  a.btn.btn--yellow.btn-small(href=`/edit-review/${review._id}`) Edit
+                  button.btn.btn--red.btn-small(data-review-id=`${review._id}` onclick="deleteReview(this)") Delete
+
+    //- Đặt script ngay sau `block content`
+    script.
+      function editReview(button) {
+        const reviewId = button.getAttribute('data-review-id');
+        alert('Edit review: ' + reviewId);
+        // TODO: Redirect or open a modal for editing
+      }
+
+      function deleteReview(button) {
+        const reviewId = button.getAttribute('data-review-id');
+        if (confirm('Are you sure you want to delete this review?')) {
+          fetch(`/api/v1/reviews/${reviewId}`, { method: 'DELETE' })
+            .then(response => {
+              if (response.ok) {
+                alert('Review deleted successfully!');
+                location.reload();
+              } else {
+                alert('Failed to delete review.');
+              }
+            });
+        }
+      }

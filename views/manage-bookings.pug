@@ -1,0 +1,19 @@
+extends base
+block content
+    main.main
+    h1 Bookings Management
+    table
+        tr
+            th ID
+            th Tour
+            th User
+            th Price
+            th Paid
+        each booking in bookings
+            tr
+                td= booking._id
+                td= booking.tour.name
+                td= booking.user.name
+                td= booking.price
+                td= booking.paid ? 'Yes' : 'No'
+

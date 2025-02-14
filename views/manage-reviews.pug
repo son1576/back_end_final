@@ -1,0 +1,18 @@
+extends base
+block content
+    main.main
+        h1 Reviews Management
+        table
+            tr
+                th ID
+                th Tour
+                th User
+                th Rating
+                th Review
+            each review in reviews
+                tr
+                    td= review._id
+                    td= review.tour.name
+                    td= review.user.name
+                    td= review.rating
+                    td= review.review
