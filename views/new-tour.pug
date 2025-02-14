@@ -1,0 +1,43 @@
+extends base
+
+block content
+  main.main
+    .container.new-tour-container
+        h1.page-title Add New Tour
+        form.new-tour-form(method="POST" action="/manage-tours/create" enctype="multipart/form-data")
+            .form-group
+                label(for="name") Tour Name
+                input#name.form-control(type="text" name="name" required)
+
+            .form-group
+                label(for="duration") Duration (days)
+                input#duration.form-control(type="number" name="duration" required)
+
+            .form-group
+                label(for="maxGroupSize") Maximum Group Size
+                input#maxGroupSize.form-control(type="number" name="maxGroupSize" required)
+
+            .form-group
+                label(for="difficulty") Difficulty
+                select#difficulty.form-control(name="difficulty" required)
+                    option(value="easy") Easy
+                    option(value="medium") Medium
+                    option(value="hard") Hard
+
+            .form-group
+                label(for="price") Price (USD)
+                input#price.form-control(type="number" name="price" step="0.01" required)
+
+            .form-group
+                label(for="summary") Short Description
+                textarea#summary.form-control(name="summary" rows="3" required)
+
+            .form-group
+                label(for="imageCover") Cover Image
+                input#imageCover.form-control(type="file" name="imageCover" accept="image/*" required)
+
+            .form-group
+                label(for="images") Additional Images (Max 3)
+                input#images.form-control(type="file" name="images" accept="image/*" multiple)
+
+            button.btn.btn-primary(type="submit") Add Tour

@@ -1,0 +1,35 @@
+extends base
+
+block content
+    main.main
+        .billing-container
+            h1.heading-primary My Billings
+
+            if bookings.length === 0
+                p No paid bookings found.
+
+            each booking in bookings
+                .card
+                    .card__header
+                        .card__picture
+                            img.card__picture-img(src=`/img/tours/${booking.tour.imageCover}`, alt=`${booking.tour.name} Tour`)
+                        h3.heading-tertiary #{booking.tour.name}
+
+                    .card__details
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-calendar')
+                            span #{new Date(booking.createdAt).toLocaleDateString('en-us', { day: 'numeric', month: 'long', year: 'numeric' })}
+
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-credit-card')
+                            span Price: $#{booking.price}
+
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-check-circle')
+                            span Payment: #{booking.paid ? 'Paid' : 'Not Paid'}
+
+                    .card__footer
+                        a.btn.btn--green.btn--small(href=`/tour/${booking.tour.slug}`) View Tour

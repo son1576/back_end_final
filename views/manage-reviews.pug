@@ -1,0 +1,22 @@
+extends base
+block content
+    main.main
+        h1 Reviews Management
+        table
+            tr
+                th ID
+                th Tour
+                th User
+                th Rating
+                th Review
+                th Action
+            each review in reviews
+                tr
+                    td= review._id
+                    td= review.tour.name
+                    td= review.user.name
+                    td= review.rating
+                    td= review.review
+                    td  
+                        form(method="POST" action=`/manage-reviews/delete/${review._id}` style="display:inline")
+                                button.btn.btn-danger(type="submit" onclick="return confirm('Are you sure?')") Delete

@@ -1,0 +1,26 @@
+extends base
+
+block content
+    .container
+        h1 Users Management
+        a.btn.btn-success(href="/manage-users/new-user") Add User
+
+        table.table
+            thead
+                tr
+                    th ID
+                    th Name
+                    th Email
+                    th Role
+                    th Actions
+            tbody
+                each user in users
+                    tr
+                        td= user._id
+                        td= user.name
+                        td= user.email
+                        td= user.role
+                        td
+                            a.btn.btn-warning(href=`/manage-users/edit/${user._id}`) Edit
+                            form(method="POST" action=`/manage-users/delete/${user._id}` style="display:inline")
+                                button.btn.btn-danger(type="submit" onclick="return confirm('Are you sure?')") Delete

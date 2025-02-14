@@ -1,0 +1,46 @@
+extends base
+
+block content
+  .container
+    h1.page-title Edit Tour
+    form.form-container(method="POST" action=`/manage-tours/update/${tour._id}` enctype="multipart/form-data")
+      .form-group
+        label.form-label(for="name") Tour Name
+        input#name.form-control.input-lg(type="text" name="name" value=tour.name required)
+
+      .form-group
+        label.form-label(for="duration") Duration (days)
+        input#duration.form-control.input-lg(type="number" name="duration" value=tour.duration required)
+
+      .form-group
+        label.form-label(for="maxGroupSize") Maximum Group Size
+        input#maxGroupSize.form-control.input-lg(type="number" name="maxGroupSize" value=tour.maxGroupSize required)
+
+      .form-group
+        label.form-label(for="difficulty") Difficulty
+        select#difficulty.form-control.input-lg(name="difficulty" required)
+          option(value="easy" selected=tour.difficulty==='easy') Easy
+          option(value="medium" selected=tour.difficulty==='medium') Medium
+          option(value="hard" selected=tour.difficulty==='hard') Hard
+
+      .form-group
+        label.form-label(for="price") Price (USD)
+        input#price.form-control.input-lg(type="number" name="price" value=tour.price step="0.01" required)
+
+      .form-group
+        label.form-label(for="summary") Short Description
+        textarea#summary.form-control.input-lg(name="summary" rows="3" required)= tour.summary
+
+      .form-group
+        label.form-label(for="imageCover") Cover Image
+        input#imageCover.form-control.input-lg(type="file" name="imageCover" accept="image/*")
+        img.tour-image(src=`/img/tours/${tour.imageCover}` alt="Tour Cover")
+
+      .form-group
+        label.form-label(for="images") Additional Images (Max 3)
+        input#images.form-control.input-lg(type="file" name="images" accept="image/*" multiple)
+        .image-gallery
+          each image in tour.images
+            img.tour-image-small(src=`/img/tours/${image}` alt="Tour Image")
+
+      button.btn.btn-primary.btn-lg(type="submit") Update Tour

@@ -1,0 +1,35 @@
+extends base
+
+block content
+    main.main
+        .container
+            h1 Add New User
+            form(method="POST" action="/manage-users/create" enctype="multipart/form-data")
+                .form-group
+                    label(for="name") Name
+                    input#name.form-control(type="text" name="name" required)
+
+                .form-group
+                    label(for="email") Email
+                    input#email.form-control(type="email" name="email" required)
+
+                .form-group
+                    label(for="role") Role
+                    select#role.form-control(name="role" required)
+                        option(value="user") User
+                        option(value="admin") Admin
+
+                .form-group
+                    label(for="password") Password
+                    input#password.form-control(type="password" name="password" required)
+
+                .form-group
+                    label(for="confirmPassword") Confirm Password
+                    input#passwordConfirm.form-control(type="password" name="passwordConfirm" required)
+
+                .form-group
+                    label(for="active") Active
+                    input#active(type="checkbox" name="active" )
+
+                .form-group
+                    button.btn.btn-success(type="submit") Create User

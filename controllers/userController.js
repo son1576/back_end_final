@@ -12,6 +12,7 @@ const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const handlerFactory = require('./handlerFactory');
+const Email = require('../utils/email');
 
 const multerStorage = multer.memoryStorage();
 
@@ -28,46 +29,15 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadUserPhoto = upload.single('photo');
+exports.uploadUserPhoto = upload.fields([
+  { name: 'photo', maxCount: 1 },
+]);
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
-
-  req.file.filename = `user-${req.user.id}`;
-
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toBuffer();
-
-  const streamUpload = () =>
-    new Promise((resolve) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            folder: 'Natours/users',
-            public_id: req.file.filename,
-            access_mode: 'public',
-            overwrite: true,
-          },
-          (error, result) => {
-            if (result) {
-              resolve(result);
-            } else {
-              return next(new AppError('Error uploading file to cloudinary'));
-            }
-          }
-        )
-        .end(req.file.buffer);
-    });
-  const result = await streamUpload();
-
-  req.file.filename = result.secure_url;
-
-  next();
+  if (!req.files.photo) {
+    return next();
+  }
 });
-
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -91,7 +61,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
 
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, 'name', 'email', 'photo');
   if (req.file) {
     filteredBody.photo = req.file.filename;
   }
@@ -117,11 +87,58 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = handlerFactory.getAll(User);
 exports.getUser = handlerFactory.getOne(User);
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined! Please use /signup instead',
+exports.createUser = catchAsync(async (req, res, next) => {
+  const newUser = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    role: req.body.role,
+  });  
+  res.redirect('/manage-users');
+});
+
+
+exports.renderNewUser = (req, res) => {
+  res.status(200).render('new-user', {
+    title: 'Add New User',
   });
 };
-exports.updateUser = handlerFactory.updateOne(User);
-exports.deleteUser = handlerFactory.deleteOne(User);
+
+exports.renderEditUser = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new AppError('No user found with that ID', 404));
+  }
+  res.status(200).render('edit-user', {
+    title: 'Edit User',
+    user,
+  });
+});
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
+  res.redirect('/manage-users'); // Sau khi update, chuyển hướng về trang quản lý tours
+});
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.redirect('/manage-users');
+});
+
+exports.uploadUserImages = upload.fields([
+  { name: 'photo', maxCount: 1 },
+]);
+
+exports.resizeUserImages = catchAsync(async (req, res, next) => {
+  if (!req.files.photo) {
+    return next();
+  }
+});

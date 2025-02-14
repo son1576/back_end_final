@@ -50,7 +50,7 @@ block content
 
           each guide in tour.guides
             .overview-box__detail
-              img.overview-box__img(src=`${guide.photo}`, alt=`${guide.name}` crossorigin="anonymous")
+              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}` crossorigin="anonymous")
               -const role=guide.role==='lead-guide' ? 'Lead guide' : 'Tour Guide'
               span.overview-box__label #{role}
               span.overview-box__text #{guide.name}
@@ -68,7 +68,7 @@ block content
 
   section.section-map
     #map(data-locations=`${JSON.stringify(tour.locations)}`)
-    
+
   section.section-reviews
     .reviews
       each review in tour.reviews
@@ -77,17 +77,48 @@ block content
   section.section-cta
     .cta
       .cta__img.cta__img--logo
-        img(src='/img/logo-white.png', alt='Natours logo')
+        img(src='/img/logo-white.png' alt='Natours logo')
       img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour picture')
       img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour picture')
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
-        
+      if user
+        button.btn.btn--green.span-all-rows(onclick="showModal()") Book tour now!
+      else
+        a.btn.btn--green.span-all-rows(href='/login') Log in to book tour now!        
+          // Payment modal (ẩn mặc định)
+  .modal#payment-modal(style="display: none;")
+    .modal-content
+      span.close(onclick="hideModal()") &times;
+      h2 Payment Details
+      form(method='POST' action='/payment')
+        input(type='hidden' name='tourId' value=`${tour.id}`)
         if user
-          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+          input(type='hidden' name='userId' value=`${user.id}`)
         else
-          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour now!
-        
-    
+          input(type='hidden' name='userId' value='')
+        input(type='hidden' name='price' value=`${tour.price}`)
+        if user
+          input(type='hidden' name='email' value=`${user.email}`)
+        else
+          input(type='hidden' name='email' value='')
+        label(for='phone') Phone Number:
+        input(type='number' name='phone' required)
 
+        label(for='card') Card Number:
+        input(type='number' name='card' required)
+
+        label(for='name') Cardholder Name:
+        input(type='text' name='name' required)
+
+        button(type='submit' onclick="return confirm('Are you sure you want to book this Tour?')") Confirm Payment
+
+        // Thêm JavaScript để điều khiển modal
+        script.
+          function showModal() {
+            document.getElementById('payment-modal').style.display = 'flex';
+          }
+          function hideModal() {
+            document.getElementById('payment-modal').style.display = 'none';
+          }

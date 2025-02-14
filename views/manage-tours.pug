@@ -1,0 +1,40 @@
+extends base
+
+block content
+  main.main
+    h1 Tours Management
+    
+    a.btn(href='/manage-tours/new-tour') Add New Tour
+    
+    table.table
+      thead
+        tr
+          th ID
+          th Image
+          th Name
+          th Duration
+          th Group Size
+          th Difficulty
+          th Rating
+          th Price
+          th Actions
+      tbody
+        if tours && tours.length
+          each tour in tours
+            tr
+              td= tour._id
+              td 
+                img(src=`/img/tours/${tour.imageCover}` alt=tour.name width='100')
+              td= tour.name
+              td= tour.duration + ' days'
+              td= tour.maxGroupSize
+              td= tour.difficulty
+              td= tour.ratingsAverage + ' (' + tour.ratingsQuantity + ')'
+              td= '$' + tour.price
+              td
+                a.btn.btn-edit(href=`/manage-tours/edit/${tour._id}`) Edit
+                form(action=`/manage-tours/delete/${tour._id}` method='POST' style='display:inline;')
+                  button.btn.btn-delete(type='submit' onclick='return confirm("Are you sure?")') Delete
+        else
+          tr
+            td(colspan="9") No tours found

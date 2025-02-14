@@ -20,4 +20,5 @@ Router.route('/:id')
   .patch(bookingController.updateBooking)
   .get(bookingController.getBooking);
 
+
 module.exports = Router;

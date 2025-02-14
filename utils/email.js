@@ -14,8 +14,7 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === 'development') {
       return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
+        service: 'gmail', 
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
@@ -26,6 +25,7 @@ module.exports = class Email {
       new Transport({ apiKey: process.env.SENDINBLUE_API_KEY })
     );
   }
+  
 
   async send(template, subject) {
     const html = pug.renderFile(

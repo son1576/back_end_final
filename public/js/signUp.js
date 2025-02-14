@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-
+require('dotenv').config();
 import { showAlert } from './alert.js';
 
 export const signUp = async (data) => {

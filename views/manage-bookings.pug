@@ -1,0 +1,23 @@
+extends base
+block content
+    main.main
+    h1 Bookings Management
+    table
+        tr
+            th ID
+            th Tour
+            th User
+            th Time Booking
+            th Price
+            th Paid
+            th Action
+        each booking in bookings
+            tr
+                td= booking._id
+                td= booking.tour.name
+                td= booking.user.name
+                td= booking.createdAt
+                td= booking.price
+                td= booking.paid ? 'Yes' : 'No'
+                td
+                    a.btn.btn--green.btn--small(href=`/tour/${booking.tour.slug}`) View Tour

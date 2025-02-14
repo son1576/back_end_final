@@ -1,0 +1,39 @@
+extends base
+
+block content
+    main.main 
+        .user-view
+            h1.heading-primary My Bookings
+
+            if bookings.length === 0
+                p No bookings found.
+            .card-container
+                each booking in bookings
+                    .card
+                        .card__header
+                            .card__picture
+                                .card__picture-overlay &nbsp;
+                            h3.heading-tertirary
+                                span #{booking.tour.name}
+                        .card__details
+                            p.card__text #{booking.tour.summary}
+                            .card__data
+                                svg.card__icon
+                                    use(xlink:href='/img/icons.svg#icon-calendar')
+                                span #{booking.createdAt.toLocaleDateString('en-us', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        .card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-user')
+                            span Name User Booking: #{booking.user.name}
+                            span Email User Booking: #{booking.user.email}
+                            
+                        .card__footer
+                            p
+                                span.card__footer-value $#{booking.price}
+                                span.card__footer-text per person
+                            p.card__status
+                                if booking.paid
+                                    span.card__footer-value Paid ✅
+                                else
+                                    span.card__footer-value Not Paid ❌
+                            a.btn.btn--green.btn--small(href=`/tour/${booking.tour.slug}`) View Tour
