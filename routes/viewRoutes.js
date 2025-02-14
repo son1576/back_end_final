@@ -5,6 +5,8 @@ const authController = require('../controllers/authController');
 const tourController = require('../controllers/tourController');
 const userController = require('../controllers/userController');
 const reviewController = require('../controllers/reviewController');
+const bookingController = require('../controllers/bookingController');
+
 
 const Router = express.Router();
 
@@ -51,10 +53,10 @@ Router.get(
 
 // manage tour route
 
-Router.get('/manage-tours', tourController.getAllTours);
-Router.get('/manage-tours/new-tour', tourController.renderNewTour);
-Router.get('/manage-tours/edit/:id', tourController.renderEditTour);
-Router.get('/manage-tours/delete/:id', tourController.deleteTour);
+Router.get('/manage-tours',authController.protect, tourController.getAllTours);
+Router.get('/manage-tours/new-tour',authController.protect, tourController.renderNewTour);
+Router.get('/manage-tours/edit/:id',authController.protect, tourController.renderEditTour);
+Router.get('/manage-tours/delete/:id',authController.protect, tourController.deleteTour);
 
 Router.post('/manage-tours/create',
   authController.protect,
@@ -79,10 +81,10 @@ Router.post('/manage-tours/delete/:id',
 );
 
 //manage user route
-Router.get('/manage-users', userController.getAllUsers);
-Router.get('/manage-users/new-user', userController.renderNewUser);
-Router.get('/manage-users/edit/:id', userController.renderEditUser);
-Router.get('/manage-users/delete/:id', userController.deleteUser);
+Router.get('/manage-users',authController.protect, userController.getAllUsers);
+Router.get('/manage-users/new-user',authController.protect, userController.renderNewUser);
+Router.get('/manage-users/edit/:id',authController.protect, userController.renderEditUser);
+Router.get('/manage-users/delete/:id',authController.protect, userController.deleteUser);
 
 Router.post(
   '/manage-users/create',
@@ -117,4 +119,8 @@ Router.get(
   viewController.getManageReviews
 );
 Router.post('/manage-reviews/delete/:id', reviewController.deleteReview);
+
+// Route payment
+Router.post('/payment', authController.protect, bookingController.payment);
+
 module.exports = Router;

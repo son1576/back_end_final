@@ -83,6 +83,44 @@ exports.webhookCheckout = async (req, res, next) => {
     },
   });
 };
+const Email = require('../utils/email');
+//test thanh toán giả lập
+exports.payment = async (req, res, next) => {
+  try {
+    const { tourId, userId, price, email } = req.body;
+
+    // Tạo booking
+    const booking = await Booking.create({
+      tour: tourId,
+      user: userId,
+      price: price,
+      paid: true,
+    });
+
+    // Gửi email xác nhận
+    await new Email({ email, name: 'Khách hàng' }, 'http://localhost:3000/tour').send(
+      'welcome',
+      `Xác nhận thanh toán ${price}$`
+    );
+
+    // Lấy danh sách tất cả các tour để render trang overview
+    const tours = await Tour.find();
+
+    res.status(200).render('overview', {
+      title: `All Tours`,
+      message: `Payment of ${price}$ was successful!`,
+      tours: tours || [] // Truyền biến tours để tránh lỗi
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: 'fail',
+      message: error.message,
+    });
+  }
+};
+
+
 
 
 exports.getAllBookings = handlerFactory.getAll(Booking);
