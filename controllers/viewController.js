@@ -49,6 +49,7 @@ exports.updateUserData = catchAsync(async (req, res) => {
     {
       name: req.body.name,
       email: req.body.email,
+      photo: req.body.photo
     },
     { new: true, runValidators: true }
   );
@@ -71,7 +72,7 @@ exports.getMyBookings = catchAsync(async (req, res, next) => {
   const bookings = await Booking.find({ user: req.user.id }).populate('tour');
   res.status(200).render('bookings', {
     title: 'My Bookings',
-    bookings, 
+    bookings,
   });
 });
 
@@ -106,16 +107,16 @@ exports.getMyBillings = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateUserData = catchAsync(async (req, res, next) => {
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  res.status(200).render('account', {
-    title: 'Your account',
-    user: updatedUser,
-  });
-});
+// exports.updateUserData = catchAsync(async (req, res, next) => {
+//   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
+//   res.status(200).render('account', {
+//     title: 'Your account',
+//     user: updatedUser,
+//   });
+// });
 
 exports.getManageTours = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
@@ -157,9 +158,9 @@ exports.getCreateUserForm = catchAsync(async (req, res, next) => {
 
 exports.getEditUserForm = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
-  
+
   res.status(200).render('edit-user', {
-      title: 'Edit User',
-      user
+    title: 'Edit User',
+    user
   });
 });

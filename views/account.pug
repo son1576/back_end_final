@@ -29,8 +29,8 @@ block content
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your account settings
-          //- form.form.form-user-data(action='/submit-user-data', method='POST', enctype='multipart/form-data')
-          form.form.form-user-data
+          form.form.form-user-data(action='/submit-user-data', method='POST', enctype='multipart/form-data')
+            //- form.form.form-user-data
             .form__group
               label.form__label(for='name') Name
               input#name.form__input(type='text', value=`${user.name}`, required, name='name')
@@ -38,8 +38,8 @@ block content
               label.form__label(for='email') Email address
               input#email.form__input(type='email', value=`${user.email}`, required, name='email')
             .form__group.form__photo-upload
-              img.form__user-photo(src=`${user.photo}`, alt=`${user.name} photo` crossorigin="anonymous")
-              input.form__upload(type='file', accept='img/*', id='photo', name='photo')
+              img.form__user-photo(id="user-photo-preview", src=`/img/users/${user.photo}`, alt=`${user.name} photo`, crossorigin="anonymous")
+              input.form__upload(type='file', accept='image/*', id='photo', name='photo', onchange="previewPhoto(event)")
               label(for='photo') Choose new photo
             .form__group.right
               button.btn.btn--small.btn--green Save settings
@@ -60,3 +60,12 @@ block content
               input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
             .form__group.right
               button.btn.btn--small.btn--green.btn--save-password Save password
+
+    script.
+      function previewPhoto(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          document.getElementById('user-photo-preview').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }

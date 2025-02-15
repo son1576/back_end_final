@@ -123,4 +123,11 @@ Router.post('/manage-reviews/delete/:id', reviewController.deleteReview);
 // Route payment
 Router.post('/payment', authController.protect, bookingController.payment);
 
+// Route cập nhật ảnh người dùng
+Router.post('/update-user-photo', 
+  authController.protect, 
+  userController.uploadUserPhoto, 
+  userController.resizeUserPhoto, 
+  userController.updateMe
+);
 module.exports = Router;

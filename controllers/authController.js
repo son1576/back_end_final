@@ -48,6 +48,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
   ).sendWelcome();
 
   createSendToken(newUser, 201, req, res);
+  
+  res.status(200).render('login', {
+    title: 'Login',
+    message: 'Sign up successful! Please log in.',
+  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -218,3 +223,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, req, res);
 });
+
