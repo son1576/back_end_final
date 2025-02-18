@@ -94,20 +94,21 @@ block content
       h2 Payment Details
       form(method='POST' action='/payment')
         input(type='hidden' name='tourId' value=`${tour.id}`)
+        input(type='hidden' name='tourSlug' value=`${tour.slug}`)
         if user
-          input(type='hidden' name='userId' value=`${user.id}`)
+            input(type='hidden' name='userId' value=`${user.id}`)
         else
-          input(type='hidden' name='userId' value='')
+            input(type='hidden' name='userId' value='')
         input(type='hidden' name='price' value=`${tour.price}`)
         if user
-          input(type='hidden' name='email' value=`${user.email}`)
+            input(type='hidden' name='email' value=`${user.email}`)
         else
-          input(type='hidden' name='email' value='')
+            input(type='hidden' name='email' value='')
         label(for='phone') Phone Number:
-        input(type='number' name='phone' required)
+        input(type='number' name='phone' required min='1000000000' max='9999999999')
 
         label(for='card') Card Number:
-        input(type='number' name='card' required)
+        input(type='number' name='card' required minlength='13' maxlength='19' pattern='[0-9]{13,19}')
 
         label(for='name') Cardholder Name:
         input(type='text' name='name' required)

@@ -12,6 +12,9 @@ To get started with the project, clone the repository to your local machine and 
 
 `npm install`
 
+To create Database: download necessary module, and run:
+`node --no-deprecation dev-data/data/import-dev-data.js --import`
+
 To start the server, run:
 
 `npm start` or `npm run start:dev` for development mode or `npm run start:prod` for production mode

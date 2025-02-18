@@ -87,7 +87,7 @@ const Email = require('../utils/email');
 //test thanh toán giả lập
 exports.payment = async (req, res, next) => {
   try {
-    const { tourId, userId, price, email } = req.body;
+    const { tourId, userId, price, email, tourSlug } = req.body;
 
     // Tạo booking
     const booking = await Booking.create({
@@ -95,12 +95,12 @@ exports.payment = async (req, res, next) => {
       user: userId,
       price: price,
       paid: true,
-    });
-
+    });    
     // Gửi email xác nhận
-    await new Email({ email, name: 'Khách hàng' }, 'http://localhost:3000/tour').send(
+    await new Email({ email, name: 'Khách hàng' }, `http://localhost:3000/tour/${tourSlug}`).send(
       'welcome',
-      `Xác nhận thanh toán ${price}$`
+      `Xác nhận thanh toán ${price}$`,
+      `Cho tour ${tourSlug}`
     );
 
     // Lấy danh sách tất cả các tour để render trang overview
